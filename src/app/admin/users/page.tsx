@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
-import SidebarAdmin from "@/components/SidebarAdmin";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSpinner } from "react-icons/fa";
@@ -22,10 +21,10 @@ export default function Users() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   useEffect(() => {
-    let filtered = users.filter((user) =>
+    const filtered = users.filter((user) =>
       user.email.toLowerCase().includes(search.toLowerCase())
     );
 

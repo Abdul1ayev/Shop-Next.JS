@@ -19,13 +19,12 @@ type Product = {
   active: boolean;
 };
 
-
 export default function Product_Detail({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-const supabase = createClient();
+  const supabase = createClient();
 
   const { id } = use(params);
   const router = useRouter();
@@ -61,7 +60,7 @@ const supabase = createClient();
 
     fetchUser();
     fetchProduct();
-  }, [id]);
+  }, [id, supabase]);
 
   const handleAddToCart = async () => {
     if (!userId || !product) {

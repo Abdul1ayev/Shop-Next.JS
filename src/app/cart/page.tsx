@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { createClient } from "@/supabase/client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,25 +44,29 @@ export default function Cart() {
     getUser();
   }, []);
 
-  useEffect(() => {
-    if (userId) fetchCart();
+  const fetchCart = useCallback(async () => {
+    if (!userId) return;
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("cart")
+        .select("*, product:product_id (name, price, images)")
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      setCartItems(data || []);
+    } catch (error) {
+      toast.error("Error loading cart!");
+    } finally {
+      setLoading(false);
+    }
   }, [userId]);
 
-  const fetchCart = async () => {
-    if (!userId) return;
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("cart")
-      .select("*, product:product_id (name, price, images)")
-      .eq("user_id", userId);
-
-    if (error) {
-      toast.error("Error loading cart!");
-    } else {
-      setCartItems(data || []);
-    }
-    setLoading(false);
-  };
+  useEffect(() => {
+    if (userId) fetchCart();
+  }, [userId, fetchCart]);
 
   const handleRemoveItem = async (id: string) => {
     const { error } = await supabase.from("cart").delete().eq("id", id);

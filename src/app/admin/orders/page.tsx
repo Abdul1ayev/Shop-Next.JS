@@ -35,7 +35,7 @@ export default function Orders() {
       setOrders(data);
     }
     setLoading(false);
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     fetchOrders();

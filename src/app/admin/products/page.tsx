@@ -43,7 +43,7 @@ export default function Products() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   async function fetchProducts() {
     setLoading(true);
