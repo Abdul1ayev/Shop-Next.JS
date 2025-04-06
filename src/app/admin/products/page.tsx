@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
 import { toast, ToastContainer } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
@@ -40,12 +40,7 @@ export default function Products() {
     images: [] as string[],
   });
 
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, [fetchCategories]);
-
-  async function fetchProducts() {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase.from("product").select("*");
     if (error) {
@@ -55,16 +50,21 @@ export default function Products() {
       setProducts(data || []);
     }
     setLoading(false);
-  }
+  }, [supabase]);
 
-  async function fetchCategories() {
+  const fetchCategories = useCallback(async () => {
     const { data, error } = await supabase.from("category").select("*");
     if (error) {
       console.error("Error fetching categories:", error);
     } else {
       setCategories(data || []);
     }
-  }
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
 
   async function handleDelete(productId: string) {
     const { error } = await supabase

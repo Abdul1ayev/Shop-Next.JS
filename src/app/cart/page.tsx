@@ -8,6 +8,7 @@ import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { error } from "console";
 
 type CartItem = {
   id: string;
@@ -67,6 +68,7 @@ export default function Cart() {
   useEffect(() => {
     if (userId) fetchCart();
   }, [userId, fetchCart]);
+  console.log(error);
 
   const handleRemoveItem = async (id: string) => {
     const { error } = await supabase.from("cart").delete().eq("id", id);
