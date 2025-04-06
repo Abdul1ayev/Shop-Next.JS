@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,19 +19,7 @@ export default function Users() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
-
-  useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.email.toLowerCase().includes(search.toLowerCase())
-    );
-
-    setFilteredUsers(filtered);
-  }, [search, users]);
-
-  async function fetchUsers() {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("user")
@@ -42,7 +30,18 @@ export default function Users() {
       setUsers(data || []);
     }
     setLoading(false);
-  }
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchUsers(); // Now it is stable and will not trigger unnecessary re-renders
+  }, [fetchUsers]);
+  useEffect(() => {
+    const filtered = users.filter((user) =>
+      user.email.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setFilteredUsers(filtered);
+  }, [search, users]);
 
   return (
     <div className="p-3 min-h-screen bg-white">
