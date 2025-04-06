@@ -59,6 +59,8 @@ export default function Cart() {
       setCartItems(data || []);
     } catch (err) {
       toast.error("Error loading cart!");
+      console.log(err);
+      
     } finally {
       setLoading(false);
     }
