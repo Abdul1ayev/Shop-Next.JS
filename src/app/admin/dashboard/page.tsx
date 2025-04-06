@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
-import SidebarAdmin from "@/components/SidebarAdmin";
 import {
   FaBoxOpen,
   FaShoppingCart,
@@ -79,9 +78,8 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="grid grid-cols-[250px_1fr] min-h-screen bg-gray-100">
-      <SidebarAdmin />
-      <div className="p-8">
+    <div className="p-3 min-h-screen bg-white">
+      <div className="">
         <h2 className="text-3xl font-bold text-gray-800 mb-6">
           Admin Dashboard
         </h2>

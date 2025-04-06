@@ -16,7 +16,6 @@ export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"email">("email");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   const supabase = createClient();
@@ -30,12 +29,8 @@ export default function Users() {
       user.email.toLowerCase().includes(search.toLowerCase())
     );
 
-    if (sortBy === "email") {
-      filtered = filtered.sort((a, b) => a.email.localeCompare(b.email));
-    }
-
     setFilteredUsers(filtered);
-  }, [search, sortBy, users]);
+  }, [search, users]);
 
   async function fetchUsers() {
     setLoading(true);
@@ -51,12 +46,11 @@ export default function Users() {
   }
 
   return (
-    <div className="grid grid-cols-[250px_1fr] min-h-screen bg-gray-100">
-      <SidebarAdmin />
-      <div className="p-8 w-full">
-        <h1 className="text-2xl font-bold mb-4">Users</h1>
+    <div className="p-3 min-h-screen bg-white">
+      <div>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Categories</h2>
 
-        <div className="mb-4 flex gap-4">
+        <div className="mb-4 flex gap-4 w-1/3">
           <input
             type="text"
             className="border p-2 rounded flex-grow focus:ring-2 focus:ring-blue-500 outline-none"
@@ -64,13 +58,6 @@ export default function Users() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <select
-            className="border p-2 rounded"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "email")}
-          >
-            <option value="email">Sort by Email</option>
-          </select>
         </div>
 
         {loading ? (

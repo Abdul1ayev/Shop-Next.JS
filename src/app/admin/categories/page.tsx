@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/supabase/client";
-import SidebarAdmin from "@/components/SidebarAdmin";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSpinner } from "react-icons/fa";
@@ -98,11 +97,9 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="grid grid-cols-[250px_1fr] min-h-screen bg-gray-100">
-      <SidebarAdmin />
-
-      <div className="p-8 w-full">
-        <h1 className="text-2xl font-bold mb-4">Categories</h1>
+    <div className=" min-h-screen bg-white p-3">
+      <div className="">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Categories</h2>
 
         <form onSubmit={addOrUpdateCategory} className="mb-6 w-1/3 flex gap-2">
           <input

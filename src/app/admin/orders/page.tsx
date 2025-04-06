@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/supabase/client";
-import SidebarAdmin from "@/components/SidebarAdmin";
 
 type Order = {
   id: string;
@@ -80,12 +79,9 @@ export default function Orders() {
   };
 
   return (
-    <div className="w-full min-h-screen flex bg-gray-100">
-      <div>
-        <SidebarAdmin />
-      </div>
-      <div className="p-6 flex-1">
-        <h1 className="text-2xl font-bold mb-6 text-gray-700">Orders</h1>
+    <div className="p-3 min-h-screen flex bg-white">
+      <div className=" flex-1">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Orders</h2>
         {error && <p className="text-red-500">{error}</p>}
         {loading ? (
           <p className="text-gray-500">Loading...</p>

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
 import { toast, ToastContainer } from "react-toastify";
-import SidebarAdmin from "@/components/SidebarAdmin";
 import { FaSpinner } from "react-icons/fa";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import Rodal from "rodal";
@@ -164,13 +163,12 @@ export default function Products() {
   };
 
   return (
-    <div className="grid grid-cols-[250px_1fr] min-h-screen bg-gray-100">
-      <SidebarAdmin />
-      <div className="p-8 w-full flex flex-col">
-        <h1 className="text-2xl font-bold mb-4">Products</h1>
+    <div className="p-3 min-h-screen bg-white">
+      <div className=" w-full flex flex-col">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Products</h2>
         <button
           onClick={() => setAddModalVisible(true)}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+          className="bg-green-500 hover:bg-green-700 w-1/6 text-white font-bold py-2 px-4 rounded mb-4"
         >
           Add New Product
         </button>
