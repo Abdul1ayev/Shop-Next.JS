@@ -134,19 +134,26 @@ export default function Cart() {
   return (
     <div className="w-full min-h-screen flex flex-col">
       <Navbar />
-      <div className="container mx-auto px-4 py-10">
-        <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">
+      <div className="container mx-auto px-4 py-10 flex-grow">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-10 text-center text-gray-800">
           Shopping Cart 🛒
         </h1>
 
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : cartItems.length === 0 ? (
-          <p className="text-center text-gray-500 text-lg mb-10">
-            Cart is empty
-          </p>
+          <div className="text-center">
+            <p className="text-gray-500 text-lg mb-4">Your cart is empty</p>
+            <button
+              onClick={() => router.push("/")}
+              className="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Continue Shopping
+            </button>
+          </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="space-y-6">
+            {/* Desktop Table */}
             <div className="hidden md:block">
               <table className="w-full border-collapse rounded-lg shadow-xl border border-green-700 overflow-hidden">
                 <thead>
@@ -184,25 +191,27 @@ export default function Cart() {
                         ${item.product.price}
                       </td>
                       <td className="border border-green-700 p-4 py-1 text-center">
-                        <button
-                          className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
-                          onClick={() =>
-                            handleUpdateQuantity(item.id, item.quantity - 1)
-                          }
-                        >
-                          <FaMinus className="text-green-800" />
-                        </button>
-                        <span className="mx-2 text-lg font-semibold">
-                          {item.quantity}
-                        </span>
-                        <button
-                          className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
-                          onClick={() =>
-                            handleUpdateQuantity(item.id, item.quantity + 1)
-                          }
-                        >
-                          <FaPlus className="text-green-800" />
-                        </button>
+                        <div className="flex items-center justify-center">
+                          <button
+                            className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
+                            onClick={() =>
+                              handleUpdateQuantity(item.id, item.quantity - 1)
+                            }
+                          >
+                            <FaMinus className="text-green-800" />
+                          </button>
+                          <span className="mx-2 text-lg font-semibold">
+                            {item.quantity}
+                          </span>
+                          <button
+                            className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
+                            onClick={() =>
+                              handleUpdateQuantity(item.id, item.quantity + 1)
+                            }
+                          >
+                            <FaPlus className="text-green-800" />
+                          </button>
+                        </div>
                       </td>
                       <td className="border border-green-700 p-4 py-1 text-center">
                         ${item.total_price.toFixed(2)}
@@ -221,27 +230,105 @@ export default function Cart() {
               </table>
             </div>
 
-            <div className="total">
-              {cartItems.length > 0 && (
-                <div className="text-center mt-8">
-                  <p className="text-2xl font-bold text-gray-900">
-                    Total price:{" "}
-                    <span className="text-green-600">
-                      ${totalPrice.toFixed(2)}
-                    </span>
-                  </p>
+            {/* Mobile List */}
+            <div className="md:hidden space-y-4">
+              {cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-md p-4 border border-gray-200"
+                >
+                  <div className="flex space-x-4">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        width={100}
+                        height={100}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="flex-grow">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {item.product.name}
+                      </h3>
+                      <p className="text-green-600 font-medium">
+                        ${item.product.price}
+                      </p>
+                      <div className="flex items-center mt-2">
+                        <button
+                          className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
+                          onClick={() =>
+                            handleUpdateQuantity(item.id, item.quantity - 1)
+                          }
+                        >
+                          <FaMinus className="text-green-800" />
+                        </button>
+                        <span className="mx-3 text-lg font-semibold">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
+                          onClick={() =>
+                            handleUpdateQuantity(item.id, item.quantity + 1)
+                          }
+                        >
+                          <FaPlus className="text-green-800" />
+                        </button>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-gray-700 font-medium">
+                          Total: ${item.total_price.toFixed(2)}
+                        </p>
+                        <button
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          onClick={() => handleRemoveItem(item.id)}
+                        >
+                          <FaTrash size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {cartItems.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-6 mt-8">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Order Summary
+                </h2>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-medium">${totalPrice.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between mb-4">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="font-medium">Free</span>
+                </div>
+                <div className="border-t border-gray-200 pt-4 flex justify-between">
+                  <span className="text-lg font-bold">Total</span>
+                  <span className="text-lg font-bold text-green-600">
+                    ${totalPrice.toFixed(2)}
+                  </span>
+                </div>
+                <div className="mt-6 space-y-3">
                   <button
                     onClick={() => router.push("/checkout")}
-                    className="border-green-700 block mx-auto border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
+                    className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
-                    Buy Now
+                    Proceed to Checkout
+                  </button>
+                  <button
+                    onClick={() => router.push("/")}
+                    className="w-full border border-green-600 text-green-600 py-3 rounded-lg hover:bg-green-50 transition-colors font-medium"
+                  >
+                    Continue Shopping
                   </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
-        <div className="flex-grow"></div>
       </div>
       <Footer />
     </div>

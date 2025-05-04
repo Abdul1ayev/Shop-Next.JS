@@ -32,6 +32,7 @@ export default function Checkout() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+
   const fetchCart = useCallback(async () => {
     setLoading(true);
 
@@ -149,110 +150,171 @@ export default function Checkout() {
     setForm({ firstName: "", email: "", address: "", phone: "", notes: "" });
   };
 
+  const totalPrice = cartItems.reduce((acc, item) => acc + item.total_price, 0);
+
   return (
-    <div className="w-full min-h-screen flex flex-col justify-between bg-gray-100">
-      <ToastContainer position="top-right" autoClose={3000} />
+    <div className="w-full min-h-screen flex flex-col justify-between bg-gray-50">
+      <ToastContainer position="top-center" autoClose={3000} />
       <Navbar />
-      <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-2/3 bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4 text-green-700 text-center">
-            Checkout
-          </h2>
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={form.firstName}
-              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-              required
-            />
-            <input
-              className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
-            <input
-              className="border p-3 col-span-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              type="text"
-              name="address"
-              placeholder="Address"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              required
-            />
-            <input
-              className="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              type="text"
-              name="phone"
-              placeholder="Phone"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              required
-            />
-            <textarea
-              name="notes"
-              placeholder="Notes"
-              className="border p-3 col-span-2 rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-green-500"
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            ></textarea>
-          </form>
-          <button
-            onClick={handleSubmit}
-            className="border-green-700 block mx-auto border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-
-        <div className="w-full md:w-1/3 bg-white shadow-md rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-center text-gray-700">
-            Your Cart
-          </h3>
-
-          {loading ? (
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : cartItems.length === 0 ? (
-            <p className="text-center text-gray-500">No items in cart</p>
-          ) : (
-            <ul className="mt-4 space-y-4">
-              {cartItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="border rounded-lg p-3 flex items-center gap-4"
+      
+      <main className="flex-grow container mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold text-green-700 mb-6 text-center">
+          Checkout
+        </h1>
+        
+        {/* Mobile: Stacked layout */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Order Summary - Comes first on mobile */}
+          <div className="w-full lg:w-1/3 bg-white rounded-lg shadow-sm p-4 order-2 lg:order-1">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+              Your Order
+            </h2>
+            
+            {loading ? (
+              <p className="text-center text-gray-500 py-4">Loading...</p>
+            ) : cartItems.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-gray-500 mb-4">Your cart is empty</p>
+                <a 
+                  href="/" 
+                  className="inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
                 >
-                  <Image
-                    src={item.product.images[0]}
-                    alt={item.product.name}
-                    width={64}
-                    height={64}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div className="flex-1">
-                    <h4 className="text-green-700 font-semibold">
-                      {item.product.name}
-                    </h4>
-                    <p className="text-gray-600">${item.product.price}</p>
-                    <p className="text-gray-500 text-sm">
-                      Quantity: {item.quantity}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Total: ${item.total_price}
-                    </p>
+                  Continue Shopping
+                </a>
+              </div>
+            ) : (
+              <>
+                <ul className="divide-y">
+                  {cartItems.map((item) => (
+                    <li key={item.id} className="py-3 flex items-start">
+                      <div className="flex-shrink-0 mr-3">
+                        <Image
+                          src={item.product.images[0]}
+                          alt={item.product.name}
+                          width={64}
+                          height={64}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <h3 className="text-gray-800 font-medium">
+                          {item.product.name}
+                        </h3>
+                        <div className="flex justify-between text-sm text-gray-600 mt-1">
+                          <span>${item.product.price} × {item.quantity}</span>
+                          <span>${item.total_price.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="border-t mt-4 pt-4">
+                  <div className="flex justify-between font-medium text-gray-700 mb-2">
+                    <span>Subtotal</span>
+                    <span>${totalPrice.toFixed(2)}</span>
                   </div>
-                </li>
-              ))}
-            </ul>
-          )}
+                  <div className="flex justify-between font-medium text-gray-700 mb-2">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-lg text-green-700 mt-4 pt-2 border-t">
+                    <span>Total</span>
+                    <span>${totalPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          
+          {/* Checkout Form - Comes second on mobile */}
+          <div className="w-full lg:w-2/3 bg-white rounded-lg shadow-sm p-4 order-1 lg:order-2">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+              Billing Details
+            </h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-gray-700 mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="John Doe"
+                    value={form.firstName}
+                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="john@example.com"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 mb-1">Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+998901234567"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+                
+                <div className="md:col-span-2">
+                  <label className="block text-gray-700 mb-1">Address</label>
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="123 Main St, Tashkent"
+                    value={form.address}
+                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    required
+                  />
+                </div>
+                
+                <div className="md:col-span-2">
+                  <label className="block text-gray-700 mb-1">Order Notes (Optional)</label>
+                  <textarea
+                    name="notes"
+                    placeholder="Any special instructions..."
+                    value={form.notes}
+                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 h-24 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  ></textarea>
+                </div>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={cartItems.length === 0}
+                className={`w-full py-3 px-4 rounded-lg font-medium text-white mt-6 ${
+                  cartItems.length === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
+                } transition-colors`}
+              >
+                Place Order
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      </main>
+      
       <Footer />
     </div>
   );

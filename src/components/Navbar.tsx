@@ -38,7 +38,7 @@ export default function Navbar() {
       }
     };
     checkUser();
-  }, [supabase]); 
+  }, [supabase]);
 
   useEffect(() => {
     if (!user) return;
@@ -73,7 +73,7 @@ export default function Navbar() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, supabase]); 
+  }, [user, supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -82,33 +82,42 @@ export default function Navbar() {
     router.push("/");
   };
 
+  // Close menu when navigating
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    setMenuOpen(false);
+  };
+
   return (
     <>
-      <nav className="flex justify-between h-[60] p-2 items-center  bg-white shadow-md sticky top-0 z-50">
+      <nav className="flex h-[110] justify-between items-center bg-white shadow-md sticky top-0 z-50 p-4">
         <div className="flex items-center space-x-4">
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          <button 
+            className="md:hidden" 
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? (
+              <X size={28} className="text-gray-700" />
+            ) : (
+              <Menu size={28} className="text-gray-700" />
+            )}
           </button>
           <button
-            onClick={() => router.push("/")}
+            onClick={() => handleNavigation("/")}
             className="text-3xl font-bold text-green-600"
           >
             GREENSHOP
           </button>
         </div>
-        <ul
-  className={`w-full md:w-auto top-16 p-4 md:p-0 transition-all duration-300 ease-in-out rounded-md md:rounded-none shadow-md md:shadow-none
-    ${menuOpen ? "flex flex-col absolute left-0 right-0 items-center" : "hidden"}
-    md:flex md:items-center md:space-x-6 bg-white md:bg-transparent`}
-  style={{ backgroundColor: menuOpen ? 'white' : 'transparent' }} // This forces the color change
->
 
-
+        {/* Desktop Navigation */}
+        <ul className="hidden md:flex md:items-center md:space-x-6">
           {pathname !== "/" && (
             <li>
               <button
-                onClick={() => router.push("/")}
-                className="border-green-700 block mx-auto border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
+                onClick={() => handleNavigation("/")}
+                className="border-green-700 border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded"
               >
                 Home
               </button>
@@ -118,8 +127,8 @@ export default function Navbar() {
           {user?.role === "admin" && pathname !== "/admin" && (
             <li>
               <button
-                onClick={() => router.push("/admin")}
-                className="border-green-700 block mx-auto border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
+                onClick={() => handleNavigation("/admin")}
+                className="border-green-700 border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded"
               >
                 Admin
               </button>
@@ -128,12 +137,12 @@ export default function Navbar() {
           <li className="relative">
             {pathname !== "/cart" && (
               <button
-                onClick={() => router.push("/cart")}
-                className="relative flex items-center mx-auto gap-2 border-2 border-green-700 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
+                onClick={() => handleNavigation("/cart")}
+                className="relative flex items-center gap-2 border-2 border-green-700 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded"
               >
                 <ShoppingCart size={22} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2">
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -142,7 +151,7 @@ export default function Navbar() {
           </li>
           <li className="relative">
             {user ? (
-              <div className="relative mt-4">
+              <div className="relative">
                 <Image
                   width={48}
                   height={48}
@@ -156,7 +165,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 bg-white shadow-lg border rounded-md p-2 w-40 z-50">
                     {pathname !== "/cabinet" && (
                       <button
-                        onClick={() => router.push("/cabinet")}
+                        onClick={() => handleNavigation("/cabinet")}
                         className="flex items-center w-full p-2 hover:bg-gray-100 rounded-md"
                       >
                         <User size={18} className="mr-2" />
@@ -176,8 +185,8 @@ export default function Navbar() {
             ) : (
               pathname !== "/login" && (
                 <button
-                  onClick={() => router.push("/login")}
-                  className="border-green-700 block mx-auto border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
+                  onClick={() => handleNavigation("/login")}
+                  className="border-green-700 border-2 text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded"
                 >
                   LogIn
                 </button>
@@ -185,6 +194,93 @@ export default function Navbar() {
             )}
           </li>
         </ul>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="fixed inset-0 z-40">
+            {/* Overlay */}
+            <div 
+              className="absolute inset-0 bg-black bg-opacity-50"
+              onClick={() => setMenuOpen(false)}
+            ></div>
+            
+            {/* Menu Content */}
+            <div className="absolute top-0 left-0 h-full w-4/5 max-w-xs bg-white shadow-lg transform transition-transform duration-300 ease-in-out">
+              <div className="p-4 border-b border-gray-200">
+                <button
+                  onClick={() => handleNavigation("/")}
+                  className="text-2xl font-bold text-green-600"
+                >
+                  GREENSHOP
+                </button>
+              </div>
+              
+              <div className="p-4 space-y-4">
+                {pathname !== "/" && (
+                  <button
+                    onClick={() => handleNavigation("/")}
+                    className="w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  >
+                    Home
+                  </button>
+                )}
+
+                {user?.role === "admin" && pathname !== "/admin" && (
+                  <button
+                    onClick={() => handleNavigation("/admin")}
+                    className="w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  >
+                    Admin
+                  </button>
+                )}
+
+                {pathname !== "/cart" && (
+                  <button
+                    onClick={() => handleNavigation("/cart")}
+                    className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  >
+                    <span>Cart</span>
+                    {cartCount > 0 && (
+                      <span className="bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1">
+                        {cartCount}
+                      </span>
+                    )}
+                  </button>
+                )}
+
+                {user ? (
+                  <>
+                    {pathname !== "/cabinet" && (
+                      <button
+                        onClick={() => handleNavigation("/cabinet")}
+                        className="w-full flex items-center p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                      >
+                        <User size={18} className="mr-2" />
+                        Cabinet
+                      </button>
+                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-red-600"
+                    >
+                      <LogOut size={18} className="mr-2" />
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  pathname !== "/login" && (
+                    <button
+                      onClick={() => handleNavigation("/login")}
+                      className="w-full text-left p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                    >
+                      LogIn
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
     </>
   );
