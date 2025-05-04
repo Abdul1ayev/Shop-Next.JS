@@ -126,6 +126,15 @@ export default function Product_Detail({
     }
   };
   const handleBuyNow = async () => {
+    if (!userId || !product) {
+      toast.error("Foydalanuvchi yoki mahsulot ma'lumotlari topilmadi!");
+  
+      if (!userId) {
+        router.push("/login"); 
+      }
+  
+      return;
+    }
     await handleAddToCart();
     router.push("/cart");
   };
