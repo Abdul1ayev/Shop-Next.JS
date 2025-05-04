@@ -84,7 +84,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="flex justify-between h-[80] p-2 items-center  bg-white shadow-md sticky top-0 z-50">
+      <nav className="flex justify-between md:h-0 h-[80] p-2 items-center  bg-white shadow-md sticky top-0 z-50">
         <div className="flex items-center space-x-4">
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={28} /> : <Menu size={28} />}
