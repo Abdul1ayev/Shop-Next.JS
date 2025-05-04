@@ -22,7 +22,7 @@ type Product = {
   active: boolean;
 };
 
-const Product = () => {
+const Products_user = () => {
   const router = useRouter();
   const supabase = createClient();
   const [product, setProduct] = useState<Product[]>([]);
@@ -197,4 +197,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default Products_user;

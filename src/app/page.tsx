@@ -1,14 +1,14 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import React from "react";
-import Product from "./(product)/page";
 import Section from "@/components/Section";
+import Products_user from "./products/page";
 const Page = () => {
   return (
     <div>
       <Navbar />
       <Section/>
-      <Product />
+      <Products_user />
       <Footer />
     </div>
   );
