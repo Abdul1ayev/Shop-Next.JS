@@ -24,7 +24,7 @@ const Section = () => {
              
               <div className="absolute inset-0 bg-white bg-opacity-30 flex flex-col justify-center items-center text-center text-green-400 p-4">
                 <h1 className="text-5xl md:text-6xl font-extrabold mb-4 animate-fadeInUp">
-                  LET'S MAKE A{" "}
+                  LET`S MAKE A{" "}
                   <span className="text-green-400">BETTER PLANET</span>
                 </h1>
                 <p className="text-lg md:text-xl mb-3 animate-fadeInUp delay-200">
