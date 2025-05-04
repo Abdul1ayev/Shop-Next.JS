@@ -21,11 +21,7 @@ const Section = () => {
         >
           <SwiperSlide>
             <div className="relative w-full h-full">
-              <img
-                src="https://source.unsplash.com/1600x900/?plants,nature"
-                alt="Background"
-                className="w-full h-full object-cover"
-              />
+             
               <div className="absolute inset-0 bg-white bg-opacity-30 flex flex-col justify-center items-center text-center text-green-400 p-4">
                 <h1 className="text-5xl md:text-6xl font-extrabold mb-4 animate-fadeInUp">
                   LET'S MAKE A{" "}
