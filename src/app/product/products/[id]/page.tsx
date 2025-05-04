@@ -65,6 +65,11 @@ export default function Product_Detail({
   const handleAddToCart = async () => {
     if (!userId || !product) {
       toast.error("Foydalanuvchi yoki mahsulot ma'lumotlari topilmadi!");
+  
+      if (!userId) {
+        router.push("/login"); 
+      }
+  
       return;
     }
 
