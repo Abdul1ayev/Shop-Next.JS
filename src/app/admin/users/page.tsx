@@ -33,7 +33,7 @@ export default function Users() {
   }, [supabase]);
 
   useEffect(() => {
-    fetchUsers(); // Now it is stable and will not trigger unnecessary re-renders
+    fetchUsers();
   }, [fetchUsers]);
   useEffect(() => {
     const filtered = users.filter((user) =>

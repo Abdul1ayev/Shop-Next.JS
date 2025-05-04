@@ -106,7 +106,7 @@ export default function Footer() {
           </p>
           <p className="text-green-400 text-sm mt-2">
             Designed by{" "}
-            <a href="#" className="hover:text-green-300">
+            <a href="https://t.me/Abdullaev_Samir" className="hover:text-green-300">
               Abdullayev
             </a>
           </p>

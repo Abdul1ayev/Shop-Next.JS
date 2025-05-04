@@ -6,9 +6,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 const Section = () => {
   return (
-    <div className=" mx-auto ">
+    <div className=" mx-auto p-2">
       <section
-        className="md:px-16 md:py-10 px-2 py-2
+        className="md:px-16 md:py-10  py-2
 "
       >
         <Swiper

@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { createClient } from "@/supabase/client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,31 +44,30 @@ export default function Cart() {
     getUser();
   }, []);
 
-  const fetchCart = useCallback(async () => {
-    if (!userId) return;
-
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("cart")
-        .select("*, product:product_id (name, price, images)")
-        .eq("user_id", userId);
-
-      if (error) throw error;
-
-      setCartItems(data || []);
-    } catch (err) {
-      toast.error("Error loading cart!");
-      console.log(err);
-      
-    } finally {
-      setLoading(false);
-    }
-  }, [userId]);
-
   useEffect(() => {
+    const fetchCart = async () => {
+      if (!userId) return;
+
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("cart")
+          .select("*, product:product_id (name, price, images)")
+          .eq("user_id", userId);
+
+        if (error) throw error;
+
+        setCartItems(data || []);
+      } catch (err) {
+        toast.error("Error loading cart!");
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (userId) fetchCart();
-  }, [userId, fetchCart]);
+  }, [userId]);
 
   const handleRemoveItem = async (id: string) => {
     const { error } = await supabase.from("cart").delete().eq("id", id);
@@ -76,7 +75,7 @@ export default function Cart() {
       toast.error("Error removing item!");
     } else {
       toast.success("Item removed successfully!");
-      setCartItems(cartItems.filter((item) => item.id !== id));
+      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     }
   };
 
@@ -94,8 +93,8 @@ export default function Cart() {
     if (error) {
       toast.error("Error updating quantity!");
     } else {
-      setCartItems(
-        cartItems.map((item) =>
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
           item.id === id
             ? { ...item, quantity: newQuantity, total_price: newTotalPrice }
             : item
@@ -147,7 +146,7 @@ export default function Cart() {
             Cart is empty
           </p>
         ) : (
-          <div className="overflow-x-auto ">
+          <div className="overflow-x-auto">
             <div className="hidden md:block">
               <table className="w-full border-collapse rounded-lg shadow-xl border border-green-700 overflow-hidden">
                 <thead>
@@ -221,48 +220,7 @@ export default function Cart() {
                 </tbody>
               </table>
             </div>
-            <div className="md:hidden">
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="border text-center rounded-lg p-4 shadow-md mb-4"
-                >
-                  {item.product.images && item.product.images.length > 0 && (
-                    <Image
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      width={160}
-                      height={160}
-                      className="w-full h-40 object-cover rounded-lg"
-                    />
-                  )}
 
-                  <h2 className="text-lg font-bold">{item.product.name}</h2>
-                  <p className="text-green-600">${item.product.price}</p>
-                  <div className="flex items-center justify-center mt-2">
-                    <button
-                      className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
-                      onClick={() =>
-                        handleUpdateQuantity(item.id, item.quantity - 1)
-                      }
-                    >
-                      <FaMinus className="text-green-800" />
-                    </button>
-                    <span className="mx-2 text-lg font-semibold">
-                      {item.quantity}
-                    </span>
-                    <button
-                      className="p-1 bg-green-200 rounded-lg hover:bg-green-300 transition-all"
-                      onClick={() =>
-                        handleUpdateQuantity(item.id, item.quantity + 1)
-                      }
-                    >
-                      <FaPlus className="text-green-800" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
             <div className="total">
               {cartItems.length > 0 && (
                 <div className="text-center mt-8">
