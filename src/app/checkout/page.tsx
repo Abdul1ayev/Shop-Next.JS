@@ -6,6 +6,7 @@ import { createClient } from "@/supabase/client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import Link from "next/link";
 
 type CartItem = {
   id: string;
@@ -175,12 +176,12 @@ export default function Checkout() {
             ) : cartItems.length === 0 ? (
               <div className="text-center py-4">
                 <p className="text-gray-500 mb-4">Your cart is empty</p>
-                <a 
+                <Link
                   href="/" 
                   className="inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
                 >
                   Continue Shopping
-                </a>
+                </Link>
               </div>
             ) : (
               <>
