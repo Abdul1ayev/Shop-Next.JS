@@ -6,6 +6,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 
+
 type Category = {
   id: string;
   name: string;
