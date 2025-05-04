@@ -184,7 +184,7 @@ const Products_user = () => {
                     ${product.price}
                   </div>
                   <button
-                    onClick={() => router.push(`/products/${product.id}`)}
+                    onClick={() => router.push(`/product/products/${product.id}`)}
                     className="border-green-700 block border-2  mx-auto text-green-700 hover:text-green-500 hover:border-green-500 transition-all py-2 px-4 rounded mt-4"
                   >
                     View Details
